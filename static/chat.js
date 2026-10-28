@@ -1,5 +1,6 @@
 const form = document.getElementById("chat-form");
 const input = document.getElementById("message-input");
+const styleChoice = document.getElementById("type-choice");
 const log = document.getElementById("chat-log");
 
 function appendMessage(role, text) {
@@ -13,6 +14,7 @@ function appendMessage(role, text) {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const message = input.value.trim();
+  const selectedStyle = styleChoice.value; 
   if (!message) return;
 
   appendMessage("user", message);
@@ -23,7 +25,7 @@ form.addEventListener("submit", async (event) => {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, selectedStyle}),
     });
 
     if (!res.ok) {
