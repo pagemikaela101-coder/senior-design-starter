@@ -34,6 +34,7 @@ def index():
 def chat():
     data = request.get_json(force=True)
     user_message = (data.get("message") or "").strip()
+    selected_style = (data.get("selectedStyle"))
     if not user_message:
         return jsonify({"error": "message is required"}), 400
 
@@ -41,8 +42,12 @@ def chat():
     # read a chosen preset (e.g. "concise" / "detailed" / "casual")
     # from the request body and turn it into a real system_prompt
     # string passed to model_client.chat() below.
-    system_prompt = None
-
+    prompts  = {
+        "Concise": "Respond with a short answer",
+        "Detailed": "Respond with an in depth answer", 
+        "Casual": "Respond with a relaxed tone", 
+    }
+    system_prompt = prompts.get(selected_style)
     conversation.append({"role": "user", "content": user_message})
 
     reply = model_client.chat(conversation, system_prompt=system_prompt)
